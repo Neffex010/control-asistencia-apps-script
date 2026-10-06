@@ -315,6 +315,8 @@
   <script>
     let participantes = [];
     let sesiones = [];
+    let cambiosSinGuardar = false;
+    let ultimaSesionSeleccionada = '';
 
     document.addEventListener('DOMContentLoaded', cargarSesiones);
     document.getElementById('sesion').addEventListener('change', cargarParticipantes);
@@ -349,7 +351,16 @@
     }
 
     function cargarParticipantes() {
+      if (cambiosSinGuardar) {
+        if (!confirm('Tienes cambios sin guardar en esta sesión. ¿Descartarlos?')) {
+          document.getElementById('sesion').value = ultimaSesionSeleccionada || '';
+          return;
+        }
+        cambiosSinGuardar = false;
+      }
+
       const idSesion = document.getElementById('sesion').value;
+      if (idSesion) ultimaSesionSeleccionada = idSesion;
       if (idSesion) localStorage.setItem('ultimaSesion', idSesion);
 
       document.getElementById('lista').innerHTML = '';
@@ -413,6 +424,7 @@
         check.checked = Boolean(p.presente);
         check.addEventListener('change', () => {
           participantes[indice].presente = check.checked;
+          cambiosSinGuardar = true;
           actualizarContador();
         });
 
@@ -446,7 +458,11 @@
     function guardar() {
       const idSesion = document.getElementById('sesion').value;
 
-      if (!confirm('¿Guardar la asistencia de esta sesión?')) return;
+      const sesionActual = sesiones.find(s => s.id === idSesion);
+      const numSesion = sesionActual ? sesionActual.numero : '?';
+      const presentesCount = participantes.filter(p => p.presente).length;
+      const ausentesCount = participantes.length - presentesCount;
+      if (!confirm(`¿Guardar Sesión ${numSesion}?\n\n${presentesCount} presentes, ${ausentesCount} ausentes.`)) return;
 
       if (!idSesion) {
         mostrarMensaje('Selecciona una sesión.', false);
@@ -466,6 +482,7 @@
           );
 
           mostrarToast(`Guardado: ${resultado.presentes} presentes, ${resultado.ausentes} ausentes.`);
+          cambiosSinGuardar = false;
           if (navigator.vibrate) navigator.vibrate(100);
 
           const sesion = sesiones.find(s => s.id === idSesion);
@@ -587,6 +604,13 @@
       URL.revokeObjectURL(url);
       mostrarToast('CSV descargado.');
     }
+
+    window.addEventListener('beforeunload', (e) => {
+      if (cambiosSinGuardar) {
+        e.preventDefault();
+        e.returnValue = '';
+      }
+    });
   </script>
 
   <div id="toast" class="toast"></div>

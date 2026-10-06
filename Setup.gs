@@ -93,3 +93,23 @@ function formatearHoja_(hoja) {
 
   hoja.autoResizeColumns(1, ultimaColumna);
 }
+
+function ajustarFechasSesiones() {
+  const ss = obtenerLibro_();
+  const hoja = ss.getSheetByName(HOJAS.SESIONES);
+  if (!hoja || hoja.getLastRow() < 2) return 'No hay sesiones.';
+
+  const inicio = new Date(2026, 9, 5);
+  inicio.setHours(0, 0, 0, 0);
+
+  const filas = hoja.getLastRow() - 1;
+  const nuevasFechas = Array.from({ length: filas }, (_, i) => {
+    const f = new Date(inicio);
+    f.setDate(inicio.getDate() + (i * 7));
+    return [f];
+  });
+
+  hoja.getRange(2, 3, nuevasFechas.length, 1).setValues(nuevasFechas);
+  hoja.getRange(2, 3, nuevasFechas.length, 1).setNumberFormat('yyyy-mm-dd');
+  return 'Fechas ajustadas correctamente.';
+}
