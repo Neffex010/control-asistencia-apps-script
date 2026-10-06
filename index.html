@@ -56,9 +56,15 @@
         <span id="contador">Presentes: 0 / 0</span>
         <span id="estadoSesion"></span>
       </div>
+
+      <div style="height:8px;background:#e5e7eb;border-radius:4px;margin-top:10px;overflow:hidden;">
+        <div id="barra" style="height:100%;width:0%;background:#16a34a;border-radius:4px;transition:width .2s;"></div>
+      </div>
     </section>
 
     <section class="panel">
+      <input id="buscador" type="search" placeholder="Buscar por nombre o ID..." style="width:100%;min-height:44px;padding:10px;border:1px solid #d1d5db;border-radius:10px;margin-bottom:10px;font-size:1rem;">
+
       <div id="cargando" class="cargando">Cargando...</div>
       <div id="lista"></div>
 
@@ -76,6 +82,7 @@
 
     document.addEventListener('DOMContentLoaded', cargarSesiones);
     document.getElementById('sesion').addEventListener('change', cargarParticipantes);
+    document.getElementById('buscador').addEventListener('input', renderParticipantes);
 
     function cargarSesiones() {
       mostrarCarga(true);
@@ -86,7 +93,8 @@
           sesiones.forEach(s => {
             const option = document.createElement('option');
             option.value = s.id;
-            option.textContent = `Sesión ${s.numero} - ${s.fecha || 'sin fecha'} - ${s.tema}`;
+            const estado = s.estado ? `[${s.estado}]` : '';
+            option.textContent = `Sesión ${s.numero} - ${s.fecha || 'sin fecha'} · ${s.tema} ${estado}`;
             select.appendChild(option);
           });
           mostrarCarga(false);
@@ -126,7 +134,16 @@
       const lista = document.getElementById('lista');
       lista.innerHTML = '';
 
-      participantes.forEach((p, indice) => {
+      const filtro = (document.getElementById('buscador').value || '').trim().toLowerCase();
+      const visibles = filtro
+        ? participantes.filter(p =>
+            String(p.nombre).toLowerCase().includes(filtro) ||
+            String(p.id).toLowerCase().includes(filtro))
+        : participantes;
+
+      visibles.forEach((p) => {
+        const indice = participantes.indexOf(p);
+
         const fila = document.createElement('div');
         fila.className = 'participante';
 
@@ -150,6 +167,10 @@
         lista.appendChild(fila);
       });
 
+      if (visibles.length === 0 && participantes.length > 0) {
+        lista.innerHTML = '<p style="text-align:center;color:#6b7280;padding:12px;">Sin resultados.</p>';
+      }
+
       actualizarContador();
     }
 
@@ -162,10 +183,16 @@
       const presentes = participantes.filter(p => p.presente).length;
       document.getElementById('contador').textContent =
         `Presentes: ${presentes} / ${participantes.length}`;
+
+      const total = participantes.length || 1;
+      const porcentaje = Math.round((presentes / total) * 100);
+      document.getElementById('barra').style.width = porcentaje + '%';
     }
 
     function guardar() {
       const idSesion = document.getElementById('sesion').value;
+
+      if (!confirm('¿Guardar la asistencia de esta sesión?')) return;
 
       if (!idSesion) {
         mostrarMensaje('Selecciona una sesión.', false);
