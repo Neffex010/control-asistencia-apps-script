@@ -3,9 +3,13 @@
 <head>
   <base target="_top">
   <meta charset="UTF-8">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <style>
     * { box-sizing: border-box; }
-    body { margin: 0; font-family: Arial, sans-serif; background: #f3f4f6; color: #111827; }
+    body { margin: 0; font-family: 'Inter', Arial, sans-serif; background: #f3f4f6; color: #111827; }
     .contenedor { max-width: 760px; margin: 0 auto; padding: 16px; }
     .panel { background: white; border-radius: 14px; padding: 18px; margin-bottom: 14px; box-shadow: 0 2px 10px rgba(0,0,0,.08); }
     h1 { margin: 0 0 6px; font-size: 1.45rem; }
@@ -32,7 +36,46 @@
       .acciones { grid-template-columns: 1fr; }
       .panel { padding: 14px; }
     }
+
+    h1 {
+      background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      body { background: #111827; color: #f9fafb; }
+      .panel { background: #1f2937; box-shadow: 0 4px 6px -1px rgba(0,0,0,.4); }
+      .subtitulo, .correo { color: #9ca3af; }
+      select, input[type="search"] { background: #374151; color: #f9fafb; border-color: #4b5563; }
+      .btn-secundario { background: #374151; color: #f9fafb; }
+      .btn-principal { background: #3b82f6; }
+      .participante { border-bottom-color: #374151; }
+      .ok { background: #064e3b; color: #a7f3d0; }
+      .error { background: #7f1d1d; color: #fecaca; }
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(120%);
+      background: #16a34a;
+      color: white;
+      padding: 14px 22px;
+      border-radius: 12px;
+      font-weight: 700;
+      box-shadow: 0 10px 25px rgba(0,0,0,.25);
+      transition: transform .3s ease;
+      z-index: 9999;
+      max-width: 90%;
+      text-align: center;
+    }
+    .toast.mostrar { transform: translateX(-50%) translateY(0); }
+    .toast.error { background: #dc2626; }
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
 </head>
 <body>
   <main class="contenedor">
@@ -48,8 +91,8 @@
       </select>
 
       <div class="acciones">
-        <button class="btn-secundario" onclick="marcarTodos(true)">Marcar todos</button>
-        <button class="btn-secundario" onclick="marcarTodos(false)">Desmarcar todos</button>
+        <button class="btn-secundario" onclick="marcarTodos(true)"><i class="material-icons" style="font-size:18px;vertical-align:middle;margin-right:4px;">check_circle</i>Marcar todos</button>
+        <button class="btn-secundario" onclick="marcarTodos(false)"><i class="material-icons" style="font-size:18px;vertical-align:middle;margin-right:4px;">cancel</i>Desmarcar todos</button>
       </div>
 
       <div class="resumen">
@@ -69,6 +112,7 @@
       <div id="lista"></div>
 
       <button id="guardar" class="btn-principal" onclick="guardar()" disabled>
+        <i class="material-icons" style="font-size:18px;vertical-align:middle;margin-right:4px;">save</i>
         Guardar asistencia
       </button>
 
@@ -211,6 +255,11 @@
             true
           );
 
+          mostrarToast(`Guardado: ${resultado.presentes} presentes, ${resultado.ausentes} ausentes.`);
+          if (typeof confetti === 'function') {
+            confetti({ particleCount: 80, spread: 70, origin: { y: 0.7 } });
+          }
+
           const sesion = sesiones.find(s => s.id === idSesion);
           if (sesion) {
             sesion.estado = 'REGISTRADA';
@@ -232,6 +281,7 @@
       mostrarCarga(false);
       const texto = error && error.message ? error.message : String(error);
       mostrarMensaje(texto, false);
+      mostrarToast(texto, true);
     }
 
     function mostrarMensaje(texto, correcto) {
@@ -248,6 +298,15 @@
         .replaceAll('"', '&quot;')
         .replaceAll("'", '&#039;');
     }
+
+    function mostrarToast(texto, esError) {
+      const toast = document.getElementById('toast');
+      toast.textContent = texto;
+      toast.className = 'toast mostrar' + (esError ? ' error' : '');
+      setTimeout(() => { toast.className = 'toast'; }, 3000);
+    }
   </script>
+
+  <div id="toast" class="toast"></div>
 </body>
 </html>
