@@ -5,83 +5,281 @@
   <meta charset="UTF-8">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --fondo: #f7f6f3;
+      --panel: #ffffff;
+      --texto: #1a202c;
+      --texto-suave: #718096;
+      --borde: #e2e0da;
+      --borde-fuerte: #cbd0d9;
+      --acento: #4a5568;
+      --acento-hover: #2d3748;
+      --exito: #2f855a;
+      --peligro: #c53030;
+      --alerta: #b7791f;
+    }
+
     * { box-sizing: border-box; }
-    body { margin: 0; font-family: 'Inter', Arial, sans-serif; background: #f3f4f6; color: #111827; }
+
+    body {
+      margin: 0;
+      font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--fondo);
+      color: var(--texto);
+      -webkit-font-smoothing: antialiased;
+      padding-bottom: 140px;
+    }
+
     .contenedor { max-width: 760px; margin: 0 auto; padding: 16px; }
-    .panel { background: white; border-radius: 14px; padding: 18px; margin-bottom: 14px; box-shadow: 0 2px 10px rgba(0,0,0,.08); }
-    h1 { margin: 0 0 6px; font-size: 1.45rem; }
-    .subtitulo { margin: 0; color: #6b7280; }
-    label { display: block; margin-bottom: 6px; font-weight: 700; }
-    select, button { width: 100%; min-height: 48px; border-radius: 10px; font-size: 1rem; }
-    select { border: 1px solid #d1d5db; padding: 10px; background: white; }
-    button { border: 0; padding: 12px 14px; font-weight: 700; cursor: pointer; }
-    .btn-secundario { background: #e5e7eb; color: #111827; }
-    .btn-principal { background: #111827; color: white; margin-top: 12px; }
-    .acciones { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
-    .resumen { display: flex; justify-content: space-between; gap: 10px; align-items: center; margin-top: 12px; font-weight: 700; }
-    .participante { display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center; padding: 14px 0; border-bottom: 1px solid #e5e7eb; }
+
+    h1 {
+      margin: 0 0 2px;
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: var(--texto);
+    }
+
+    .subtitulo {
+      margin: 0;
+      font-size: .75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--texto-suave);
+      font-weight: 500;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-size: .75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--texto-suave);
+      font-weight: 600;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--borde);
+      border-radius: 6px;
+      padding: 16px;
+      margin-bottom: 12px;
+      box-shadow: none;
+    }
+
+    select, input[type="search"] {
+      width: 100%;
+      border: 1px solid var(--borde-fuerte);
+      border-radius: 4px;
+      padding: 10px 12px;
+      background: var(--panel);
+      color: var(--texto);
+      font-family: inherit;
+      font-size: .92rem;
+      min-height: 42px;
+    }
+    select:focus, input[type="search"]:focus {
+      outline: none;
+      border-color: var(--acento);
+      box-shadow: 0 0 0 3px rgba(74,85,104,.12);
+    }
+    input[type="search"] { margin-bottom: 10px; }
+
+    button { cursor: pointer; font-family: inherit; }
+
+    .btn-secundario {
+      width: 100%;
+      min-height: 42px;
+      background: transparent;
+      color: var(--texto);
+      border: 1px solid var(--borde-fuerte);
+      border-radius: 4px;
+      padding: 10px 14px;
+      font-weight: 600;
+      font-size: .88rem;
+      transition: background .15s, border-color .15s;
+    }
+    .btn-secundario:hover {
+      background: rgba(0,0,0,.03);
+      border-color: var(--texto-suave);
+    }
+
+    .btn-principal {
+      width: 100%;
+      min-height: 46px;
+      background: var(--acento);
+      color: white;
+      border: 0;
+      border-radius: 4px;
+      padding: 12px 16px;
+      font-weight: 600;
+      font-size: .92rem;
+      letter-spacing: .01em;
+    }
+    .btn-principal:hover { background: var(--acento-hover); }
+    .btn-principal:disabled { opacity: .45; cursor: not-allowed; }
+
+    .acciones { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+    .participante {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--borde);
+    }
     .participante:last-child { border-bottom: 0; }
-    .nombre { font-weight: 700; }
-    .correo { color: #6b7280; font-size: .9rem; overflow-wrap: anywhere; }
-    .switch { width: 26px; height: 26px; }
-    .mensaje { margin-top: 12px; padding: 10px; border-radius: 8px; display: none; }
-    .ok { display: block; background: #dcfce7; color: #166534; }
-    .error { display: block; background: #fee2e2; color: #991b1b; }
-    .cargando { display: none; text-align: center; padding: 12px; color: #4b5563; }
+
+    .nombre {
+      font-weight: 500;
+      font-size: .92rem;
+      color: var(--texto);
+      letter-spacing: -0.005em;
+    }
+    .correo {
+      color: var(--texto-suave);
+      font-size: .78rem;
+      margin-top: 2px;
+      overflow-wrap: anywhere;
+    }
+
+    .switch {
+      width: 22px;
+      height: 22px;
+      accent-color: var(--acento);
+      cursor: pointer;
+    }
+    .mensaje { margin-top: 12px; padding: 10px 12px; border-radius: 4px; display: none; font-size: .85rem; }
+    .ok { display: block; background: #e6f0ea; color: #22543d; }
+    .error { display: block; background: #fbeaea; color: #742a2a; }
+    .cargando { display: none; text-align: center; padding: 14px; color: var(--texto-suave); font-size: .85rem; }
     @media (max-width: 520px) {
       .contenedor { padding: 10px; }
       .acciones { grid-template-columns: 1fr; }
       .panel { padding: 14px; }
     }
 
-    h1 {
-      background: linear-gradient(90deg, #3b82f6, #8b5cf6);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    @media (prefers-color-scheme: dark) {
-      body { background: #111827; color: #f9fafb; }
-      .panel { background: #1f2937; box-shadow: 0 4px 6px -1px rgba(0,0,0,.4); }
-      .subtitulo, .correo { color: #9ca3af; }
-      select, input[type="search"] { background: #374151; color: #f9fafb; border-color: #4b5563; }
-      .btn-secundario { background: #374151; color: #f9fafb; }
-      .btn-principal { background: #3b82f6; }
-      .participante { border-bottom-color: #374151; }
-      .ok { background: #064e3b; color: #a7f3d0; }
-      .error { background: #7f1d1d; color: #fecaca; }
-    }
-
     .toast {
       position: fixed;
-      bottom: 24px;
+      bottom: 150px;
       left: 50%;
-      transform: translateX(-50%) translateY(120%);
-      background: #16a34a;
-      color: white;
-      padding: 14px 22px;
-      border-radius: 12px;
-      font-weight: 700;
-      box-shadow: 0 10px 25px rgba(0,0,0,.25);
-      transition: transform .3s ease;
+      transform: translateX(-50%) translateY(20px);
+      background: #1a202c;
+      color: #f7fafc;
+      padding: 12px 18px;
+      border-radius: 4px;
+      font-weight: 500;
+      font-size: .85rem;
+      letter-spacing: .01em;
       z-index: 9999;
       max-width: 90%;
       text-align: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .2s, transform .2s;
+      border-left: 3px solid var(--exito);
     }
-    .toast.mostrar { transform: translateX(-50%) translateY(0); }
-    .toast.error { background: #dc2626; }
+    .toast.mostrar {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateX(-50%) translateY(0);
+    }
+    .toast.error { border-left-color: var(--peligro); }
+
+    .footer-fijo {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--panel);
+      border-top: 1px solid var(--borde);
+      padding: 10px 16px 14px;
+      box-shadow: none;
+      z-index: 500;
+    }
+    .footer-inner { max-width: 760px; margin: 0 auto; }
+    .footer-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 600;
+      font-size: .82rem;
+      letter-spacing: .01em;
+      color: var(--texto);
+      margin-bottom: 6px;
+    }
+    .footer-barra {
+      height: 4px;
+      background: var(--borde);
+      border-radius: 2px;
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+    .footer-barra > div {
+      height: 100%;
+      width: 0%;
+      background: var(--exito);
+      border-radius: 2px;
+      transition: width .2s;
+    }
+    .footer-fijo .btn-principal { margin: 0; min-height: 46px; }
+
+    .banner-aviso {
+      background: #fefae8;
+      color: #7c5a1a;
+      padding: 10px 12px;
+      border-radius: 4px;
+      font-size: .82rem;
+      margin-top: 10px;
+      border-left: 3px solid var(--alerta);
+      display: none;
+    }
+    .banner-aviso.mostrar { display: block; }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --fondo: #16181d;
+        --panel: #1e2128;
+        --texto: #e8e6e1;
+        --texto-suave: #8a8f99;
+        --borde: #2d3138;
+        --borde-fuerte: #3a3f47;
+        --acento: #8a9bb5;
+        --acento-hover: #a0b0c8;
+      }
+      body { background: var(--fondo); color: var(--texto); }
+      .panel { background: var(--panel); border-color: var(--borde); }
+      .footer-fijo { background: var(--panel); border-top-color: var(--borde); }
+      select, input[type="search"] { background: var(--panel); color: var(--texto); border-color: var(--borde-fuerte); }
+      .btn-secundario { color: var(--texto); border-color: var(--borde-fuerte); }
+      .banner-aviso { background: #2a2418; color: #e5c98a; }
+      .ok { background: #1e2b23; color: #9ae6b4; }
+      .error { background: #2b1e1e; color: #feb2b2; }
+    }
   </style>
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
 </head>
 <body>
   <main class="contenedor">
-    <section class="panel">
-      <h1>Control de asistencia</h1>
-      <p class="subtitulo">30 participantes · 10 sesiones</p>
+    <header style="padding:20px 16px 14px;border-bottom:1px solid var(--borde);margin-bottom:16px;">
+      <h1 style="margin:0 0 2px;font-size:1.15rem;font-weight:700;color:var(--texto);letter-spacing:-0.01em;">
+        Control de asistencia
+      </h1>
+      <p style="margin:0;font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--texto-suave);font-weight:500;">
+        30 participantes · 10 sesiones
+      </p>
+    </header>
+
+    <section class="panel" style="display:flex;gap:10px;align-items:center;justify-content:space-between;">
+      <div>
+        <strong>Panel de control</strong>
+        <div class="subtitulo" style="font-size:.85rem;">Resumen general del curso</div>
+      </div>
+      <button class="btn-secundario" style="width:auto;padding:10px 16px;" onclick="abrirReportes()">
+        Ver reportes
+      </button>
     </section>
 
     <section class="panel">
@@ -90,31 +288,25 @@
         <option value="">Selecciona una sesión</option>
       </select>
 
+      <div id="bannerAviso" class="banner-aviso">
+        Esta sesión ya fue guardada. Los cambios sobrescribirán los registros existentes.
+      </div>
+
       <div class="acciones">
-        <button class="btn-secundario" onclick="marcarTodos(true)"><i class="material-icons" style="font-size:18px;vertical-align:middle;margin-right:4px;">check_circle</i>Marcar todos</button>
-        <button class="btn-secundario" onclick="marcarTodos(false)"><i class="material-icons" style="font-size:18px;vertical-align:middle;margin-right:4px;">cancel</i>Desmarcar todos</button>
+        <button class="btn-secundario" onclick="marcarTodos(true)">Marcar todos</button>
+        <button class="btn-secundario" onclick="marcarTodos(false)">Desmarcar todos</button>
       </div>
 
-      <div class="resumen">
-        <span id="contador">Presentes: 0 / 0</span>
-        <span id="estadoSesion"></span>
-      </div>
-
-      <div style="height:8px;background:#e5e7eb;border-radius:4px;margin-top:10px;overflow:hidden;">
-        <div id="barra" style="height:100%;width:0%;background:#16a34a;border-radius:4px;transition:width .2s;"></div>
-      </div>
+      <button class="btn-secundario" style="margin-top:8px;" onclick="exportarCSV()">
+        Exportar a CSV
+      </button>
     </section>
 
     <section class="panel">
-      <input id="buscador" type="search" placeholder="Buscar por nombre o ID..." style="width:100%;min-height:44px;padding:10px;border:1px solid #d1d5db;border-radius:10px;margin-bottom:10px;font-size:1rem;">
+      <input id="buscador" type="search" placeholder="Buscar por nombre o ID...">
 
       <div id="cargando" class="cargando">Cargando...</div>
       <div id="lista"></div>
-
-      <button id="guardar" class="btn-principal" onclick="guardar()" disabled>
-        <i class="material-icons" style="font-size:18px;vertical-align:middle;margin-right:4px;">save</i>
-        Guardar asistencia
-      </button>
 
       <div id="mensaje" class="mensaje"></div>
     </section>
@@ -142,6 +334,15 @@
             select.appendChild(option);
           });
           mostrarCarga(false);
+
+          const ultima = localStorage.getItem('ultimaSesion');
+          if (ultima) {
+            const opt = Array.from(select.options).find(o => o.value === ultima);
+            if (opt) {
+              select.value = ultima;
+              cargarParticipantes();
+            }
+          }
         })
         .withFailureHandler(mostrarError)
         .obtenerSesiones();
@@ -149,6 +350,8 @@
 
     function cargarParticipantes() {
       const idSesion = document.getElementById('sesion').value;
+      if (idSesion) localStorage.setItem('ultimaSesion', idSesion);
+
       document.getElementById('lista').innerHTML = '';
       document.getElementById('guardar').disabled = true;
 
@@ -161,6 +364,13 @@
 
       const sesion = sesiones.find(s => s.id === idSesion);
       document.getElementById('estadoSesion').textContent = sesion ? sesion.estado : '';
+
+      const banner = document.getElementById('bannerAviso');
+      if (sesion && sesion.estado === 'REGISTRADA') {
+        banner.classList.add('mostrar');
+      } else {
+        banner.classList.remove('mostrar');
+      }
 
       mostrarCarga(true);
       google.script.run
@@ -256,9 +466,7 @@
           );
 
           mostrarToast(`Guardado: ${resultado.presentes} presentes, ${resultado.ausentes} ausentes.`);
-          if (typeof confetti === 'function') {
-            confetti({ particleCount: 80, spread: 70, origin: { y: 0.7 } });
-          }
+          if (navigator.vibrate) navigator.vibrate(100);
 
           const sesion = sesiones.find(s => s.id === idSesion);
           if (sesion) {
@@ -305,8 +513,95 @@
       toast.className = 'toast mostrar' + (esError ? ' error' : '');
       setTimeout(() => { toast.className = 'toast'; }, 3000);
     }
+
+    function abrirReportes() {
+      mostrarCarga(true);
+      google.script.run
+        .withSuccessHandler(renderReportes)
+        .withFailureHandler(mostrarError)
+        .obtenerReporte();
+    }
+
+    function renderReportes(data) {
+      mostrarCarga(false);
+      cerrarReportes();
+
+      let html = '<div style="padding:10px 0;"><h2 style="margin:0 0 12px;">Asistencia por participante</h2><table style="width:100%;border-collapse:collapse;font-size:.9rem;">';
+      html += '<tr style="border-bottom:2px solid #e5e7eb;text-align:left;"><th style="padding:6px;">ID</th><th>Nombre</th><th style="text-align:center;">P</th><th style="text-align:center;">A</th><th style="text-align:center;">%</th></tr>';
+      data.porParticipante.forEach(p => {
+        const color = p.porcentaje >= 80 ? '#16a34a' : p.porcentaje >= 50 ? '#f59e0b' : '#dc2626';
+        html += `<tr style="border-bottom:1px solid #f3f4f6;">
+          <td style="padding:6px;">${p.id}</td>
+          <td>${escapar(p.nombre)}</td>
+          <td style="text-align:center;">${p.presentes}</td>
+          <td style="text-align:center;">${p.ausentes}</td>
+          <td style="text-align:center;font-weight:700;color:${color};">${p.porcentaje}%</td>
+        </tr>`;
+      });
+      html += '</table></div>';
+
+      html += '<div style="padding:10px 0;margin-top:20px;"><h2 style="margin:0 0 12px;">Asistencia por sesión</h2><table style="width:100%;border-collapse:collapse;font-size:.9rem;">';
+      html += '<tr style="border-bottom:2px solid #e5e7eb;text-align:left;"><th style="padding:6px;">Sesión</th><th style="text-align:center;">Presentes</th><th style="text-align:center;">Total</th><th style="text-align:center;">%</th></tr>';
+      data.porSesion.forEach(s => {
+        const color = s.porcentaje >= 80 ? '#16a34a' : s.porcentaje >= 50 ? '#f59e0b' : '#dc2626';
+        html += `<tr style="border-bottom:1px solid #f3f4f6;">
+          <td style="padding:6px;">S${String(s.numero).padStart(2, '0')}</td>
+          <td style="text-align:center;">${s.presentes}</td>
+          <td style="text-align:center;">${s.total}</td>
+          <td style="text-align:center;font-weight:700;color:${color};">${s.porcentaje}%</td>
+        </tr>`;
+      });
+      html += '</table></div>';
+
+      html += '<button class="btn-secundario" style="margin-top:16px;" onclick="cerrarReportes()">Cerrar</button>';
+
+      const panel = document.createElement('section');
+      panel.className = 'panel';
+      panel.id = 'panelReportes';
+      panel.innerHTML = html;
+      document.querySelector('main').appendChild(panel);
+      panel.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function cerrarReportes() {
+      const p = document.getElementById('panelReportes');
+      if (p) p.remove();
+    }
+
+    function exportarCSV() {
+      if (!participantes.length) {
+        mostrarToast('Selecciona una sesión primero.', true);
+        return;
+      }
+      const idSesion = document.getElementById('sesion').value;
+      let csv = 'id_sesion,id_participante,nombre,estado\n';
+      participantes.forEach(p => {
+        csv += `${idSesion},${p.id},"${p.nombre}",${p.presente ? 'PRESENTE' : 'AUSENTE'}\n`;
+      });
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `asistencia_${idSesion}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+      mostrarToast('CSV descargado.');
+    }
   </script>
 
   <div id="toast" class="toast"></div>
+
+  <footer class="footer-fijo">
+    <div class="footer-inner">
+      <div class="footer-info">
+        <span id="contador">Presentes: 0 / 0</span>
+        <span id="estadoSesion" style="font-size:.8rem;color:#6b7280;"></span>
+      </div>
+      <div class="footer-barra"><div id="barra"></div></div>
+      <button id="guardar" class="btn-principal" onclick="guardar()" disabled>
+        Guardar asistencia
+      </button>
+    </div>
+  </footer>
 </body>
 </html>
